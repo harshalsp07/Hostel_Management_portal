@@ -5,6 +5,7 @@ this is the app where you can see and manage the hostel and make the hostel life
 
 use 
 npm install && npm run dev
+```mermaid
 flowchart TD
     A[Open Website] --> B[See Login Screen]
     B --> C{Enter Email & Password?}
@@ -16,3 +17,4 @@ flowchart TD
     E --> G[Use Hostel Features]
     G --> H[Log Out]
     H --> B
+```
