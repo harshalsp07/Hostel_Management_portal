@@ -89,6 +89,7 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
                             >
                                 <option value="student">Student</option>
                                 <option value="worker">Worker</option>
+                                <option value="admin">Admin</option>
                             </select>
                         </div>
                         <div className="form-field">

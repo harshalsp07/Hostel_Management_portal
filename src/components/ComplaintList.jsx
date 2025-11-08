@@ -29,7 +29,7 @@ const complaints = [
   },
 ];
 
-export default function ComplaintList() {
+export default function ComplaintList({ canAdd = true }) {
   const [activeTag, setActiveTag] = useState("All");
 
   // derive unique tags from complaints
@@ -48,7 +48,7 @@ export default function ComplaintList() {
     <section className="card">
       <div className="complaint-header-bar">
         <h2>💬 Public Complaints</h2>
-        <button className="btn">+ Add Complaint</button>
+        {canAdd && <button className="btn">+ Add Complaint</button>}
       </div>
 
       <div className="filter-buttons">

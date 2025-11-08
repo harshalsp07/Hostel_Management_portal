@@ -22,10 +22,13 @@ const notices = [
   },
 ];
 
-export default function NoticeBoard() {
+export default function NoticeBoard({ canAdd = false }) {
   return (
     <section className="card">
-      <h2>🔔 Notice Board</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>🔔 Notice Board</h2>
+        {canAdd && <button className="btn">+ Add Notice</button>}
+      </div>
       {notices.map((n) => (
         <div key={n.title} className="notice-item">
           <div className="notice-header">

@@ -8,17 +8,47 @@ import NoticeBoard from './components/NoticeBoard';
 
 
 export const HostelDashboard = ({ user, onLogout }) => {
-    const handleLogout = async () => {
-        await onLogout?.();
-    };
+  const handleLogout = async () => {
+    await onLogout?.();
+  };
 
-    return (
+  return (
     <div className="app">
       <Header />
       <div className="container">
         <NoticeBoard />
         <CleaningStatus />
         <ComplaintList />
+        <EquipmentAvailability />
+      </div>
+    </div>
+  );
+};
+
+export const AdminDashboard = ({ user, onLogout }) => {
+  const handleLogout = async () => await onLogout?.();
+  return (
+    <div className="app">
+      <Header />
+      <div className="container">
+        <NoticeBoard canAdd={true} />
+        <CleaningStatus showAll={true} />
+        <ComplaintList canAdd={false} />
+        <EquipmentAvailability />
+      </div>
+    </div>
+  );
+};
+
+export const WorkerDashboard = ({ user, onLogout }) => {
+  const handleLogout = async () => await onLogout?.();
+  return (
+    <div className="app">
+      <Header />
+      <div className="container">
+        <NoticeBoard canAdd={true} />
+        <CleaningStatus showAll={true} />
+        <ComplaintList canAdd={false} />
         <EquipmentAvailability />
       </div>
     </div>

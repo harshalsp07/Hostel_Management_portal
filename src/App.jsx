@@ -10,7 +10,7 @@ import {
   signOut,
 } from 'firebase/auth'
 import { AuthForm } from './Login.jsx'
-import { HostelDashboard } from './Dashboard.jsx'
+import { HostelDashboard, AdminDashboard, WorkerDashboard } from './Dashboard.jsx'
 import { firebaseConfig as defaultFirebaseConfig } from '../firebase.js'
 
 // --- Firebase Configuration ---
@@ -61,6 +61,7 @@ const getFriendlyErrorMessage = (error) => {
 
 export default function App() {
   const [user, setUser] = useState(null)
+  const [userType, setUserType] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [message, setMessage] = useState({ text: '', isError: false })
   const [isProcessing, setIsProcessing] = useState(false)
@@ -94,6 +95,8 @@ export default function App() {
     setIsProcessing(true)
     setMessage({ text: mode === 'login' ? 'Signing in...' : 'Creating account...', isError: false })
     console.log('User Type:', userType);
+    // Persist the last selected userType locally so we can demo role-based UI without a backend user role
+    setUserType(userType)
     try {
       if (mode === 'login') {
         await signInWithEmailAndPassword(auth, email, password)
@@ -114,6 +117,7 @@ export default function App() {
     try {
       await signOut(auth)
       await performInitialAuth()
+      setUserType(null)
     } catch (error) {
       console.error('Logout Error:', error)
     }
@@ -147,7 +151,14 @@ export default function App() {
   return (
     <div className="app-shell">
       {user ? (
-        <HostelDashboard user={user} onLogout={handleLogout} />
+        // Render dashboard according to userType (falls back to HostelDashboard)
+        userType === 'admin' ? (
+          <AdminDashboard user={user} onLogout={handleLogout} />
+        ) : userType === 'worker' ? (
+          <WorkerDashboard user={user} onLogout={handleLogout} />
+        ) : (
+          <HostelDashboard user={user} onLogout={handleLogout} />
+        )
       ) : (
         <AuthForm
           onSubmit={handleAuthSubmit}
