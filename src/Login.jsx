@@ -6,6 +6,7 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [userType, setUserType] = useState('student');
 
     const switchTab = (showLogin) => {
         setIsLogin(showLogin);
@@ -33,6 +34,7 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
             mode: isLogin ? 'login' : 'signup',
             email,
             password,
+            userType,
         });
     };
 
@@ -74,6 +76,21 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
                     )}
 
                     <form className="auth-form" onSubmit={handleSubmit}>
+                        <div className="form-field">
+                            <label htmlFor="user-type" className="field-label">
+                                User Type
+                            </label>
+                            <select
+                                id="user-type"
+                                name="user-type"
+                                value={userType}
+                                onChange={(e) => setUserType(e.target.value)}
+                                className="field-input"
+                            >
+                                <option value="student">Student</option>
+                                <option value="worker">Worker</option>
+                            </select>
+                        </div>
                         <div className="form-field">
                             <label htmlFor="email-address" className="field-label">
                                 Email address

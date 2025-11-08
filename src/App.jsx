@@ -89,10 +89,11 @@ export default function App() {
     }
   }, [])
 
-  const handleAuthSubmit = async ({ mode, email, password }) => {
+  const handleAuthSubmit = async ({ mode, email, password, userType }) => {
     if (!auth) return
     setIsProcessing(true)
     setMessage({ text: mode === 'login' ? 'Signing in...' : 'Creating account...', isError: false })
+    console.log('User Type:', userType);
     try {
       if (mode === 'login') {
         await signInWithEmailAndPassword(auth, email, password)
