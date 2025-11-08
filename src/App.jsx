@@ -9,7 +9,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
-import { AuthForm, HostelDashboard } from './Login.jsx'
+import { AuthForm } from './Login.jsx'
+import { HostelDashboard } from './Dashboard.jsx'
 import { firebaseConfig as defaultFirebaseConfig } from '../firebase.js'
 
 // --- Firebase Configuration ---
@@ -158,3 +159,4 @@ export default function App() {
     </div>
   )
 }
+
