@@ -153,11 +153,11 @@ export default function App() {
       {user ? (
         // Render dashboard according to userType (falls back to HostelDashboard)
         userType === 'admin' ? (
-          <AdminDashboard user={user} onLogout={handleLogout} />
+          <AdminDashboard user={user} userType={userType} onLogout={handleLogout} />
         ) : userType === 'worker' ? (
-          <WorkerDashboard user={user} onLogout={handleLogout} />
+          <WorkerDashboard user={user} userType={userType} onLogout={handleLogout} />
         ) : (
-          <HostelDashboard user={user} onLogout={handleLogout} />
+          <HostelDashboard user={user} userType={userType} onLogout={handleLogout} />
         )
       ) : (
         <AuthForm
