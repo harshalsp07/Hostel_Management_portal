@@ -35,6 +35,30 @@
   border: 2px solid white;
 }
 
+/* Logout button in header */
+.header .logout {
+  margin-left: 12px;
+}
+.logout-button {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.logout-button:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+/* Slightly improve header text styles */
+.header p {
+  margin: 0;
+  opacity: 0.95;
+}
+
 /* Notice Board */
 .notice-item {
   background: #f0f7ff;
@@ -199,4 +223,17 @@
   text-align: right;
   font-size: 0.8rem;
   margin-top: 3px;
+}
+
+/* Cleaning grid for admin/worker: two columns */
+.cleaning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .cleaning-grid {
+    grid-template-columns: 1fr;
+  }
 }

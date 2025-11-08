@@ -14,7 +14,7 @@ export const HostelDashboard = ({ user, onLogout }) => {
 
   return (
     <div className="app">
-      <Header />
+      <Header user={user} onLogout={onLogout} />
       <div className="container">
         <NoticeBoard />
         <CleaningStatus />
@@ -29,7 +29,7 @@ export const AdminDashboard = ({ user, onLogout }) => {
   const handleLogout = async () => await onLogout?.();
   return (
     <div className="app">
-      <Header />
+      <Header user={user} onLogout={onLogout} />
       <div className="container">
         <NoticeBoard canAdd={true} />
         <CleaningStatus showAll={true} />
@@ -44,7 +44,7 @@ export const WorkerDashboard = ({ user, onLogout }) => {
   const handleLogout = async () => await onLogout?.();
   return (
     <div className="app">
-      <Header />
+      <Header user={user} onLogout={onLogout} />
       <div className="container">
         <NoticeBoard canAdd={true} />
         <CleaningStatus showAll={true} />

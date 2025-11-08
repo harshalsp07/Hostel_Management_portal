@@ -24,34 +24,55 @@ export default function CleaningStatus({ showAll = false }) {
       <h2>🧹 {showAll ? 'All Rooms Cleaning Status' : 'My Room Cleaning Status'}</h2>
 
       {showAll && (
-        <div style={{ marginBottom: 10 }}>
-          {levels.map((lvl) => (
-            <button
-              key={lvl}
-              onClick={() => setActiveLevel(lvl)}
-              className={`filter-btn ${lvl === activeLevel ? 'active' : ''}`}
-              style={{ marginRight: 6 }}
-            >
-              {lvl}
-            </button>
-          ))}
-        </div>
+        <>
+          <div style={{ marginBottom: 10 }}>
+            {levels.map((lvl) => (
+              <button
+                key={lvl}
+                onClick={() => setActiveLevel(lvl)}
+                className={`filter-btn ${lvl === activeLevel ? 'active' : ''}`}
+                style={{ marginRight: 6 }}
+              >
+                {lvl}
+              </button>
+            ))}
+          </div>
+
+          <div className="cleaning-grid">
+            {visibleRooms.map((r) => (
+              <div key={r.room} className="cleaning-box">
+                <div>
+                  <h3>Room {r.room} — {r.level}</h3>
+                  <p>
+                    <b>Last cleaned:</b> {r.last}
+                  </p>
+                  <p>
+                    <b>Next scheduled:</b> {r.next}
+                  </p>
+                </div>
+                <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
-      {visibleRooms.map((r) => (
-        <div key={r.room} className="cleaning-box">
-          <div>
-            <h3>Room {r.room} — {r.level}</h3>
-            <p>
-              <b>Last cleaned:</b> {r.last}
-            </p>
-            <p>
-              <b>Next scheduled:</b> {r.next}
-            </p>
+      {!showAll && (
+        visibleRooms.map((r) => (
+          <div key={r.room} className="cleaning-box">
+            <div>
+              <h3>Room {r.room} — {r.level}</h3>
+              <p>
+                <b>Last cleaned:</b> {r.last}
+              </p>
+              <p>
+                <b>Next scheduled:</b> {r.next}
+              </p>
+            </div>
+            <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
           </div>
-          <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
-        </div>
-      ))}
+        ))
+      )}
     </section>
   );
 }
