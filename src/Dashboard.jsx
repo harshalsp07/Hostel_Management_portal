@@ -34,7 +34,7 @@ export const AdminDashboard = ({ user, onLogout }) => {
         <NoticeBoard canAdd={true} />
         <CleaningStatus showAll={true} />
         <ComplaintList canAdd={false} />
-        <EquipmentAvailability />
+        <EquipmentAvailability canAdd={true}/>
       </div>
     </div>
   );
