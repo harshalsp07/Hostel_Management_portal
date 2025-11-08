@@ -7,14 +7,14 @@ import CleaningStatus from './components/CleaningStatus';
 import NoticeBoard from './components/NoticeBoard';
 
 
-export const HostelDashboard = ({ user, onLogout }) => {
+export const HostelDashboard = ({ user, userType, onLogout }) => {
   const handleLogout = async () => {
     await onLogout?.();
   };
 
   return (
     <div className="app">
-      <Header user={user} onLogout={onLogout} />
+  <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
         <NoticeBoard />
         <CleaningStatus />
@@ -25,26 +25,26 @@ export const HostelDashboard = ({ user, onLogout }) => {
   );
 };
 
-export const AdminDashboard = ({ user, onLogout }) => {
+export const AdminDashboard = ({ user, userType, onLogout }) => {
   const handleLogout = async () => await onLogout?.();
   return (
     <div className="app">
-      <Header user={user} onLogout={onLogout} />
+      <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
         <NoticeBoard canAdd={true} />
         <CleaningStatus showAll={true} />
         <ComplaintList canAdd={false} />
-        <EquipmentAvailability />
+        <EquipmentAvailability canEdit={true} />
       </div>
     </div>
   );
 };
 
-export const WorkerDashboard = ({ user, onLogout }) => {
+export const WorkerDashboard = ({ user, userType, onLogout }) => {
   const handleLogout = async () => await onLogout?.();
   return (
     <div className="app">
-      <Header user={user} onLogout={onLogout} />
+      <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
         <NoticeBoard canAdd={true} />
         <CleaningStatus showAll={true} />

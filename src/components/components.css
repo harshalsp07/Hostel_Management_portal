@@ -59,6 +59,16 @@
   opacity: 0.95;
 }
 
+.user-type {
+  font-size: 0.85rem;
+  margin-left: 6px;
+  background: rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
 /* Notice Board */
 .notice-item {
   background: #f0f7ff;
@@ -198,6 +208,18 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 15px;
+}
+.equipment-form input {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+.equipment-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
 .equipment-header {
   display: flex;

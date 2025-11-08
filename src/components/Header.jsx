@@ -1,7 +1,7 @@
 import React from "react";
 import "./components.css";
 
-export default function Header({ user, onLogout }) {
+export default function Header({ user, userType, onLogout }) {
   const name = user?.displayName || user?.email || 'Guest';
   const initials = name
     .split(' ')
@@ -14,7 +14,7 @@ export default function Header({ user, onLogout }) {
     <header className="header">
       <div>
         <h1>Kanhar Hostel</h1>
-        <p>Welcome, {name}</p>
+        <p>Welcome, {name} {userType && <span className="user-type">({userType})</span>}</p>
       </div>
       <div className="profile-circle">{initials}</div>
       <div className="logout">
