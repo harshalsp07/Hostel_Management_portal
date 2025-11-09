@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import ComplaintCard from "./ComplaintCard";
+import ComplainForm from "./ComplainForm";
 import "./components.css";
 
 const complaints = [
@@ -31,6 +32,7 @@ const complaints = [
 
 export default function ComplaintList({ canAdd = true }) {
   const [activeTag, setActiveTag] = useState("All");
+  const [showForm, setShowForm] = useState(false);
 
   // derive unique tags from complaints
   const tags = useMemo(() => {
@@ -48,8 +50,22 @@ export default function ComplaintList({ canAdd = true }) {
     <section className="card">
       <div className="complaint-header-bar">
         <h2>💬 Public Complaints</h2>
-        {canAdd && <button className="btn">+ Add Complaint</button>}
+        {canAdd && (
+          <button className="btn" onClick={() => setShowForm(!showForm)}>
+            {showForm ? "- Hide Form" : "+ Add Complaint"}
+          </button>
+        )}
       </div>
+
+      {showForm && (
+        <ComplainForm
+          onSubmit={async (payload) => {
+            // TODO: Add the new complaint to your backend/state
+            console.log("New complaint:", payload);
+            setShowForm(false); // Hide form after successful submission
+          }}
+        />
+      )}
 
       <div className="filter-buttons">
         {[["All"], tags].flat().map((f) => (

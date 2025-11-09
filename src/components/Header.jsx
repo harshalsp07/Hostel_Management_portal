@@ -13,10 +13,11 @@ export default function Header({ user, userType, onLogout }) {
   return (
     <header className="header">
       <div>
+              <div className="profile-circle">{initials}</div>
         <h1>Kanhar Hostel</h1>
         <p>Welcome, {name} {userType && <span className="user-type">({userType})</span>}</p>
       </div>
-      <div className="profile-circle">{initials}</div>
+
       <div className="logout">
         <button type="button" className="logout-button" onClick={onLogout}>
           Logout
