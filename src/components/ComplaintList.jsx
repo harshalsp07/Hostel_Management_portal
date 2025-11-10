@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { getComplaints, addComplaint, updateComplaint } from '../services/complaintService';
 import ComplaintCard from "./ComplaintCard";
+import ComplainForm from "./ComplainForm";
 import "./components.css";
 
 export default function ComplaintList({ canAdd = true, canEdit = false, user, userType }) {
@@ -50,6 +51,7 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
   };
 
   const [activeTag, setActiveTag] = useState("All");
+  const [showForm, setShowForm] = useState(false);
 
   // derive unique tags from complaints
   const tags = useMemo(() => {
