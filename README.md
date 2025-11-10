@@ -5,8 +5,8 @@ A complete hostel management system with role-based dashboards using **MongoDB**
 ## Architecture
 - **Frontend**: React + Vite
 - **Backend**: Node.js + Express
-- **Database**: MongoDB (for notices, complaints, cleaning, equipment)
-- **Authentication**: Firebase (for user auth and userType storage)
+- **Database**: MongoDB (for notices, complaints, cleaning, equipment, userType)
+- **Authentication**: Firebase (for user auth)
 
 ## Features
 - 🔐 **Role-based Authentication** (Student, Worker, Admin)
@@ -20,37 +20,8 @@ A complete hostel management system with role-based dashboards using **MongoDB**
 - MongoDB (local or MongoDB Atlas)
 - Firebase account
 
-## Setup Instructions
-
-### 1. Install MongoDB
-**Option A: Local MongoDB**
-```bash
-# Ubuntu/Debian
-sudo apt-get install mongodb
-
-# macOS
-brew install mongodb-community
-
-# Start MongoDB
-sudo systemctl start mongod
-```
-
-**Option B: MongoDB Atlas (Cloud)**
-1. Go to https://www.mongodb.com/cloud/atlas
-2. Create free account
-3. Create cluster
-4. Get connection string
-
 ### 2. Setup Backend
 ```bash
-# Navigate to backend directory
-cd backend
-
-# Install dependencies
-npm install
-
-# Create .env file
-cp .env.example .env
 
 # Edit .env and add your MongoDB URI
 # For local: mongodb://localhost:27017/hostel_management
@@ -59,28 +30,14 @@ cp .env.example .env
 
 ### 3. Setup Frontend
 ```bash
-# Navigate to project root
-cd ..
-
 # Install dependencies
 npm install
 
 # Create .env file
 cp .env.example .env
-
-# Edit .env if backend is not on localhost:5000
 ```
 
-### 4. Configure Firebase (Authentication Only)
-Firebase is used ONLY for user authentication and storing userType.
-
-1. Go to https://console.firebase.google.com
-2. Select your project: `hostelmanegement07`
-3. Enable **Authentication** → Email/Password
-4. Enable **Firestore** → Create database
-5. Your Firebase config is already in `firebase.js`
-
-### 5. Add Sample Data to MongoDB
+### 4. Add Sample Data to MongoDB
 
 **Start the backend server first:**
 ```bash
@@ -88,28 +45,6 @@ cd backend
 npm run dev
 ```
 
-**Then add sample data using these API calls:**
-
-**Sample Notices:**
-```bash
-curl -X POST http://localhost:5000/api/notices \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Welcome","content":"Welcome to hostel!","priority":"high","date":"Nov 9, 2025"}'
-```
-
-**Sample Equipment:**
-```bash
-curl -X POST http://localhost:5000/api/equipment \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Table Tennis Rackets","available":8,"total":12}'
-```
-
-**Sample Cleaning Schedule:**
-```bash
-curl -X POST http://localhost:5000/api/cleaning \
-  -H "Content-Type: application/json" \
-  -d '{"room":"C301","level":"Level 1","last":"Today, 9:00 AM","next":"Tomorrow, 9:00 AM","status":"cleaned"}'
-```
 
 ### 6. Run the Application
 
@@ -124,8 +59,6 @@ npm run dev
 npm run dev
 ```
 
-Open browser: http://localhost:5173
-
 ## User Flow
 
 ```mermaid
@@ -134,7 +67,7 @@ flowchart TD
     B --> C{New User?}
     C -- Yes --> D[Sign Up with User Type]
     C -- No --> E[Login with Email/Password]
-    D --> F[Firebase Auth + Firestore userType]
+    D --> F[Firebase Auth + MongoDB userType]
     E --> F
     F --> G{User Type?}
     G -- Student --> H[Student Dashboard]
@@ -192,22 +125,6 @@ flowchart TD
 - `PUT /api/equipment/:id` - Update equipment
 - `DELETE /api/equipment/:id` - Delete equipment
 
-## Troubleshooting
-
-**Backend won't start:**
-- Check if MongoDB is running: `mongosh` or `mongo`
-- Check port 5000 is not in use: `lsof -ti:5000`
-
-**Frontend shows "Loading forever":**
-- Ensure backend is running on port 5000
-- Check browser console for API errors
-- Verify MongoDB has sample data
-
-**Can't login:**
-- Ensure Firebase Authentication is enabled
-- Check Firebase config in `firebase.js`
-- User must signup first to create account
-
 ## Project Structure
 ```
 ├── backend/
@@ -228,4 +145,4 @@ flowchart TD
 - **Backend**: Express.js, Node.js
 - **Database**: MongoDB, Mongoose
 - **Authentication**: Firebase Auth
-- **User Storage**: Firebase Firestore (userType only)
+- **User Storage**: Mongoose (userType)

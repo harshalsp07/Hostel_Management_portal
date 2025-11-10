@@ -10,15 +10,15 @@ Hostel Management System using **MongoDB + Firebase hybrid architecture**
 │                         FRONTEND                            │
 │                    React + Vite + Vite                      │
 │                                                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
-│  │   Login.jsx  │  │  Dashboard   │  │  Components  │    │
-│  │              │  │   Student    │  │  - Notices   │    │
-│  │  - Signup    │  │   Worker     │  │  - Complaints│    │
-│  │  - Login     │  │   Admin      │  │  - Cleaning  │    │
-│  │              │  │              │  │  - Equipment │    │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘    │
-│         │                 │                  │            │
-└─────────┼─────────────────┼──────────────────┼────────────┘
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │   Login.jsx  │  │  Dashboard   │  │  Components  │       │
+│  │              │  │   Student    │  │  - Notices   │       │
+│  │  - Signup    │  │   Worker     │  │  - Complaints│       │
+│  │  - Login     │  │   Admin      │  │  - Cleaning  │       │
+│  │              │  │              │  │  - Equipment │       │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘       │
+│         │                 │                  │              │
+└─────────┼─────────────────┼──────────────────┼────────────  ┘
           │                 │                  │
           │                 │                  │
           ▼                 │                  ▼
@@ -258,12 +258,6 @@ UI re-renders
 ✅ **Easier Backups** - Standard MongoDB tools
 ✅ **Better for Relations** - Better handling of related data
 
-### Why Keep Firebase?
-✅ **Easy Authentication** - No need to build from scratch
-✅ **Secure** - Industry-standard auth
-✅ **User Management** - Built-in user admin panel
-✅ **Already Set Up** - Minimal changes needed
-
 ### Trade-offs
 ⚠️ **Two Databases** - Slightly more complex setup
 ⚠️ **Deployment** - Need to host backend server
@@ -285,28 +279,10 @@ UI re-renders
 - **dotenv** - Environment variables
 
 ### Databases
-- **MongoDB** - Primary database
-- **Firebase Firestore** - User type only
+- **MongoDB** - Primary database All the things
 
 ### Authentication
 - **Firebase Auth** - User authentication
-
-## Deployment Recommendations
-
-### Frontend
-- **Vercel** or **Netlify** (Free tier available)
-- Environment variable: `VITE_API_URL`
-
-### Backend
-- **Railway** or **Render** (Free tier available)
-- Environment variables: `MONGODB_URI`, `PORT`
-
-### Database
-- **MongoDB Atlas** (Free 512MB cluster)
-
-### Firebase
-- Already hosted by Google
-- Just need to keep it for auth
 
 ## Security Considerations
 

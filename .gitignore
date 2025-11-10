@@ -1,2 +1,4 @@
 # Dependencies\n/node_modules\n\n# Production\n/build\n/dist\n\n# Logs\nnpm-debug.log*\nyarn-debug.log*\nyarn-error.log*\n\n# Miscellaneous\n.DS_Store\n.env\n.env.local\n.env.development.local\n.env.test.local\n.env.production.local\n\n# Untracked files\nworker.jsx
 node_modules
+.env
+/backend/.env
