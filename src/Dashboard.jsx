@@ -8,32 +8,27 @@ import NoticeBoard from './components/NoticeBoard';
 
 
 export const HostelDashboard = ({ user, userType, onLogout }) => {
-  const handleLogout = async () => {
-    await onLogout?.();
-  };
-
   return (
     <div className="app">
-  <Header user={user} userType={userType} onLogout={onLogout} />
+      <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
-        <NoticeBoard />
-        <CleaningStatus />
-        <ComplaintList />
-        <EquipmentAvailability />
+        <NoticeBoard canAdd={false} canEdit={false} />
+        <CleaningStatus showAll={false} canEdit={false} user={user} userType={userType} />
+        <ComplaintList canAdd={true} canEdit={false} user={user} userType={userType} />
+        <EquipmentAvailability canEdit={false} />
       </div>
     </div>
   );
 };
 
 export const AdminDashboard = ({ user, userType, onLogout }) => {
-  const handleLogout = async () => await onLogout?.();
   return (
     <div className="app">
       <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
-        <NoticeBoard canAdd={true} />
-        <CleaningStatus showAll={true} />
-        <ComplaintList canAdd={false} />
+        <NoticeBoard canAdd={true} canEdit={true} />
+        <CleaningStatus showAll={true} canEdit={true} user={user} userType={userType} />
+        <ComplaintList canAdd={false} canEdit={true} user={user} userType={userType} />
         <EquipmentAvailability canEdit={true} />
       </div>
     </div>
@@ -41,15 +36,14 @@ export const AdminDashboard = ({ user, userType, onLogout }) => {
 };
 
 export const WorkerDashboard = ({ user, userType, onLogout }) => {
-  const handleLogout = async () => await onLogout?.();
   return (
     <div className="app">
       <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
-        <NoticeBoard canAdd={true} />
-        <CleaningStatus showAll={true} />
-        <ComplaintList canAdd={false} />
-        <EquipmentAvailability />
+        <NoticeBoard canAdd={true} canEdit={false} />
+        <CleaningStatus showAll={true} canEdit={true} user={user} userType={userType} />
+        <ComplaintList canAdd={false} canEdit={true} user={user} userType={userType} />
+        <EquipmentAvailability canEdit={false} />
       </div>
     </div>
   );

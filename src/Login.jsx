@@ -76,22 +76,25 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
                     )}
 
                     <form className="auth-form" onSubmit={handleSubmit}>
-                        <div className="form-field">
-                            <label htmlFor="user-type" className="field-label">
-                                User Type
-                            </label>
-                            <select
-                                id="user-type"
-                                name="user-type"
-                                value={userType}
-                                onChange={(e) => setUserType(e.target.value)}
-                                className="field-input"
-                            >
-                                <option value="student">Student</option>
-                                <option value="worker">Worker</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
+                        {!isLogin && (
+                            <div className="form-field">
+                                <label htmlFor="user-type" className="field-label">
+                                    User Type
+                                </label>
+                                <select
+                                    id="user-type"
+                                    name="user-type"
+                                    value={userType}
+                                    onChange={(e) => setUserType(e.target.value)}
+                                    className="field-input"
+                                    required
+                                >
+                                    <option value="student">Student</option>
+                                    <option value="worker">Worker</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                        )}
                         <div className="form-field">
                             <label htmlFor="email-address" className="field-label">
                                 Email address

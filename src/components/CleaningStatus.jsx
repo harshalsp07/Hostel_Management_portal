@@ -1,27 +1,60 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { getCleaningSchedule, updateCleaningStatus } from '../services/cleaningService';
 import "./components.css";
 
-const roomsSample = [
-  { room: "C301", level: "Level 1", last: "Today, 09:00 AM", next: "Tomorrow, 09:00 AM", status: "cleaned" },
-  { room: "C302", level: "Level 2", last: "Nov 7, 2025", next: "Nov 9, 2025", status: "needs-cleaning" },
-  { room: "C303", level: "Level 3", last: "Nov 6, 2025", next: "Nov 10, 2025", status: "scheduled" },
-  { room: "C304", level: "Level 1", last: "Today, 08:00 AM", next: "Tomorrow, 08:00 AM", status: "cleaned" },
-  { room: "C305", level: "Level 4", last: "Nov 5, 2025", next: "Nov 12, 2025", status: "scheduled" },
-];
-
-export default function CleaningStatus({ showAll = false }) {
+export default function CleaningStatus({ showAll = false, canEdit = false, user, userType }) {
+  // All hooks MUST be declared unconditionally at the top.
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeLevel, setActiveLevel] = useState("All");
 
+  useEffect(() => {
+    loadCleaningSchedule();
+  }, [userType, user]);
+
+  const loadCleaningSchedule = async () => {
+    setLoading(true);
+    const data = await getCleaningSchedule(userType, user?.roomNumber);
+    setRooms(data);
+    setLoading(false);
+  };
+
+  const handleUpdateStatus = async (id, newStatus) => {
+    try {
+      await updateCleaningStatus(id, newStatus);
+      loadCleaningSchedule();
+    } catch (error) {
+      console.error('Error updating cleaning status:', error);
+    }
+  };
+
+  // Hooks must always run in the same order; compute memos before any conditional return
   const levels = useMemo(() => ["All", "Level 1", "Level 2", "Level 3", "Level 4"], []);
 
   const visibleRooms = useMemo(() => {
-    if (!showAll) return roomsSample.slice(0, 1);
-    return activeLevel === "All" ? roomsSample : roomsSample.filter((r) => r.level === activeLevel);
-  }, [showAll, activeLevel]);
+    try {
+      if (!showAll) return rooms.slice(0, 1);
+      return activeLevel === "All" ? rooms : rooms.filter((r) => r.level === activeLevel);
+    } catch (e) {
+      // Guard against transient render errors
+      return rooms;
+    }
+  }, [showAll, activeLevel, rooms]);
+
+  if (loading) {
+    return (
+      <section className="card">
+        <p>Loading cleaning schedule...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="card ">
-      <h2>🧹 {showAll ? 'All Rooms Cleaning Status' : 'My Room Cleaning Status'}</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>🧹 {showAll ? 'All Rooms Cleaning Status' : 'My Room Cleaning Status'}</h2>
+        {canEdit && <button className="btn">✏️ Edit</button>}
+      </div>
 
       {showAll && (
         <>
@@ -50,7 +83,20 @@ export default function CleaningStatus({ showAll = false }) {
                     <b>Next scheduled:</b> {r.next}
                   </p>
                 </div>
-                <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span className={`status ${r.status?.replace(' ', '-')}`}>{r.status?.replace('-', ' ')}</span>
+                  {canEdit && (
+                    <select 
+                      value={r.status} 
+                      onChange={(e) => handleUpdateStatus(r.id, e.target.value)}
+                      style={{ marginLeft: '8px', padding: '4px' }}
+                    >
+                      <option value="cleaned">Cleaned</option>
+                      <option value="needs-cleaning">Needs Cleaning</option>
+                      <option value="scheduled">Scheduled</option>
+                    </select>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -69,7 +115,10 @@ export default function CleaningStatus({ showAll = false }) {
                 <b>Next scheduled:</b> {r.next}
               </p>
             </div>
-            <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
+              {canEdit && <button className="btn-icon">✏️</button>}
+            </div>
           </div>
         ))
       )}

@@ -6,12 +6,12 @@ import {
   signInWithCustomToken,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
 import { AuthForm } from './Login.jsx'
 import { HostelDashboard, AdminDashboard, WorkerDashboard } from './Dashboard.jsx'
 import { firebaseConfig as defaultFirebaseConfig } from '../firebase.js'
+import { loginUser, createUserProfile } from './services/userService.js'
 
 // --- Firebase Configuration ---
 // These global variables are provided by the environment.
@@ -31,6 +31,9 @@ if (firebaseConfig.apiKey) {
 // This function signs in the environment, not the end-user.
 const performInitialAuth = async () => {
   if (!auth) return
+  // Opt-in only: avoid anonymous sign-in errors when disabled in Firebase console
+  const enableInitialAuth = import.meta.env.VITE_ENABLE_INITIAL_AUTH === 'true'
+  if (!enableInitialAuth) return
   try {
     if (initialAuthToken) {
       await signInWithCustomToken(auth, initialAuthToken)
@@ -38,11 +41,17 @@ const performInitialAuth = async () => {
       await signInAnonymously(auth)
     }
   } catch (error) {
-    console.error('Initial auth error:', error)
+    // Swallow errors to avoid breaking UI if anonymous auth is disabled
+    console.warn('Initial auth skipped:', error?.message || error)
   }
 }
 
 const getFriendlyErrorMessage = (error) => {
+  // Check for custom error messages first (e.g., user type mismatch)
+  if (error.message && !error.code) {
+    return error.message
+  }
+  
   switch (error.code) {
     case 'auth/invalid-email':
       return 'Please enter a valid email address.'
@@ -75,11 +84,25 @@ export default function App() {
     let unsubscribe = () => {}
 
     performInitialAuth().then(() => {
-      unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser && currentUser.email) {
-          setUser(currentUser)
+          try {
+            const { getUserProfile, ensureUserExists } = await import('./services/userService.js')
+            let profile = await getUserProfile(currentUser.uid)
+            if (!profile) {
+              // Auto-provision Mongo profile if missing (first login after migration)
+              profile = await ensureUserExists(currentUser, { userType: 'student' })
+            }
+            setUser(profile)
+            setUserType(profile.userType || 'student')
+          } catch (error) {
+            console.error('Error loading user profile:', error)
+            setUser(currentUser)
+            setUserType('student')
+          }
         } else {
           setUser(null)
+          setUserType(null)
         }
         setIsLoading(false)
       })
@@ -94,15 +117,18 @@ export default function App() {
     if (!auth) return
     setIsProcessing(true)
     setMessage({ text: mode === 'login' ? 'Signing in...' : 'Creating account...', isError: false })
-    console.log('User Type:', userType);
-    // Persist the last selected userType locally so we can demo role-based UI without a backend user role
-    setUserType(userType)
     try {
       if (mode === 'login') {
-        await signInWithEmailAndPassword(auth, email, password)
+        const userProfile = await loginUser({ email, password })
+        setUser(userProfile)
+        setUserType(userProfile.userType)
         setMessage({ text: 'Login successful!', isError: false })
       } else {
-        await createUserWithEmailAndPassword(auth, email, password)
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        const user = userCredential.user;
+        const userProfile = await createUserProfile({ uid: user.uid, email: user.email, userType })
+        setUser(userProfile)
+        setUserType(userProfile.userType)
         setMessage({ text: 'Account created successfully!', isError: false })
       }
     } catch (error) {
@@ -117,6 +143,7 @@ export default function App() {
     try {
       await signOut(auth)
       await performInitialAuth()
+      setUser(null)
       setUserType(null)
     } catch (error) {
       console.error('Logout Error:', error)
@@ -137,7 +164,7 @@ export default function App() {
 
   if (!firebaseConfig.apiKey) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-8">
+      <div className="min-h-screen flex items-.center justify-center bg-gray-100 p-8">
         <div className="max-w-md w-full bg-white p-10 rounded-xl shadow-lg">
           <h2 className="text-center text-2xl font-bold text-red-600">Firebase Configuration Error</h2>
           <p className="mt-4 text-center text-gray-600">

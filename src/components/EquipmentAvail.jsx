@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getEquipment, addEquipment, updateEquipment, deleteEquipment } from '../services/equipmentService';
 import "./components.css";
 
 export default function EquipmentAvailability({ canEdit = false }) {
-  const [items, setItems] = useState([
-    { name: "TT Rackets", available: 7, total: 12 },
-    { name: "TT Balls", available: 18, total: 30 },
-  ]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadEquipment();
+  }, []);
+
+  const loadEquipment = async () => {
+    setLoading(true);
+    const data = await getEquipment();
+    setItems(data);
+    setLoading(false);
+  };
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [form, setForm] = useState({ name: "", available: "", total: "" });
@@ -18,12 +28,20 @@ export default function EquipmentAvailability({ canEdit = false }) {
     setAdding(false);
   };
 
-  const saveEdit = () => {
-    const updated = [...items];
-    updated[editingIndex] = { name: form.name, available: Number(form.available), total: Number(form.total) };
-    setItems(updated);
-    setEditingIndex(null);
-    setForm({ name: "", available: "", total: "" });
+  const saveEdit = async () => {
+    try {
+      const item = items[editingIndex];
+      await updateEquipment(item.id, { 
+        name: form.name, 
+        available: Number(form.available), 
+        total: Number(form.total) 
+      });
+      setEditingIndex(null);
+      setForm({ name: "", available: "", total: "" });
+      loadEquipment();
+    } catch (error) {
+      console.error('Error updating equipment:', error);
+    }
   };
 
   const startAdd = () => {
@@ -32,10 +50,19 @@ export default function EquipmentAvailability({ canEdit = false }) {
     setForm({ name: "", available: "", total: "" });
   };
 
-  const saveAdd = () => {
-    setItems([...items, { name: form.name, available: Number(form.available), total: Number(form.total) }]);
-    setAdding(false);
-    setForm({ name: "", available: "", total: "" });
+  const saveAdd = async () => {
+    try {
+      await addEquipment({ 
+        name: form.name, 
+        available: Number(form.available), 
+        total: Number(form.total) 
+      });
+      setAdding(false);
+      setForm({ name: "", available: "", total: "" });
+      loadEquipment();
+    } catch (error) {
+      console.error('Error adding equipment:', error);
+    }
   };
 
   const cancel = () => {
@@ -43,6 +70,8 @@ export default function EquipmentAvailability({ canEdit = false }) {
     setEditingIndex(null);
     setForm({ name: "", available: "", total: "" });
   };
+
+  if (loading) return <section className="card"><p>Loading equipment...</p></section>;
 
   return (
     <section className="card">
