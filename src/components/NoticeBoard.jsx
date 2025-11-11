@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getNotices, addNotice, updateNotice, deleteNotice } from '../services/noticeService';
+import bell from '../assets/icons/bell.svg';
+import trash from '../assets/icons/trash.svg';
 import "./components.css";
 
 export default function NoticeBoard({ canAdd = false, canEdit = false }) {
@@ -50,7 +52,10 @@ export default function NoticeBoard({ canAdd = false, canEdit = false }) {
   return (
     <section className="card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>🔔 Notice Board</h2>
+        <h2>
+          <img src={bell} alt="" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 8 }} />
+          Notice Board
+        </h2>
         <div>
           {canAdd && !showAddForm && <button className="btn" onClick={() => setShowAddForm(true)}>+ Add Notice</button>}
         </div>
@@ -89,12 +94,16 @@ export default function NoticeBoard({ canAdd = false, canEdit = false }) {
       {notices.length === 0 && !showAddForm && <p>No notices available.</p>}
       
       {notices.map((n) => (
-        <div key={n.id} className="notice-item">
+        <div key={n._id || n.id} className="notice-item">
           <div className="notice-header">
             <h3>{n.title}</h3>
             <div>
               <span className={`priority ${n.priority}`}>{n.priority}</span>
-              {canEdit && <button className="btn-icon" onClick={() => handleDeleteNotice(n.id)}>🗑️</button>}
+              {canEdit && (
+                <button className="btn-icon" onClick={() => handleDeleteNotice(n._id || n.id)} title="Delete">
+                  <img src={trash} alt="Delete" style={{ width: 16, height: 16 }} />
+                </button>
+              )}
             </div>
           </div>
           <p>{n.content}</p>

@@ -7,7 +7,8 @@ export const getComplaints = async (userType = null, userId = null) => {
     if (userId) params.append('userId', userId);
     
     const queryString = params.toString();
-    return await apiCall(`/complaints${queryString ? '?' + queryString : ''}`);
+    const result = await apiCall(`/complaints${queryString ? '?' + queryString : ''}`);
+    return Array.isArray(result) ? result : [];
   } catch (error) {
     console.error('Error fetching complaints:', error);
     return [];
@@ -16,10 +17,12 @@ export const getComplaints = async (userType = null, userId = null) => {
 
 export const addComplaint = async (complaintData) => {
   try {
-    return await apiCall('/complaints', {
+    const response = await apiCall('/complaints', {
       method: 'POST',
       body: JSON.stringify(complaintData),
     });
+    console.log('Complaint added successfully:', response);
+    return response;
   } catch (error) {
     console.error('Error adding complaint:', error);
     throw error;
@@ -28,12 +31,25 @@ export const addComplaint = async (complaintData) => {
 
 export const updateComplaint = async (id, updates) => {
   try {
-    return await apiCall(`/complaints/${id}`, {
+    const response = await apiCall(`/complaints/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updates),
     });
+    console.log('Complaint updated successfully:', response);
+    return response;
   } catch (error) {
     console.error('Error updating complaint:', error);
+    throw error;
+  }
+};
+
+export const deleteComplaint = async (id) => {
+  try {
+    return await apiCall(`/complaints/${id}`, {
+      method: 'DELETE',
+    });
+  } catch (error) {
+    console.error('Error deleting complaint:', error);
     throw error;
   }
 };

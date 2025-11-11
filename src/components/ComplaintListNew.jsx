@@ -1,9 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { getComplaints, addComplaint, updateComplaint, deleteComplaint } from '../services/complaintService';
 import ComplaintCard from "./ComplaintCard";
-import chat from '../assets/icons/chat.svg';
 import "./components.css";
-import "./styles-additions.css";
 
 export default function ComplaintList({ canAdd = true, canEdit = false, user, userType }) {
   const [complaints, setComplaints] = useState([]);
@@ -99,7 +97,6 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
 
   const [activeTag, setActiveTag] = useState("All");
 
-  // derive unique tags from complaints
   const tags = useMemo(() => {
     const s = new Set();
     complaints.forEach((c) => c.tags?.forEach((t) => s.add(t)));
@@ -116,10 +113,7 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
   return (
     <section className="card">
       <div className="complaint-header-bar">
-        <h2>
-          <img src={chat} alt="" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 8 }} />
-          {userType === 'student' ? 'My Complaints' : 'All Complaints'}
-        </h2>
+        <h2>💬 {userType === 'student' ? 'My Complaints' : 'All Complaints'}</h2>
         <div>
           {canAdd && !showAddForm && <button className="btn" onClick={() => setShowAddForm(true)}>+ Add Complaint</button>}
         </div>
@@ -135,14 +129,14 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
             value={formData.content}
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
             rows={3}
-            style={{ width: '100%', padding: '8px', marginBottom: '8px', fontSize: '14px' }}
+            style={{ width: '100%', padding: '8px', marginBottom: '8px', fontSize: '14px', borderRadius: '6px', border: '1px solid #ddd' }}
           />
           <input
             type="text"
             placeholder="Room Number (optional)"
             value={formData.room}
             onChange={(e) => setFormData({ ...formData, room: e.target.value })}
-            style={{ width: '100%', padding: '8px', marginBottom: '8px', fontSize: '14px' }}
+            style={{ width: '100%', padding: '8px', marginBottom: '8px', fontSize: '14px', borderRadius: '6px', border: '1px solid #ddd' }}
           />
           <button className="btn" onClick={handleAddComplaint}>Submit</button>
           <button className="btn" onClick={() => { setShowAddForm(false); setFormData({ content: '', room: '' }); }} style={{ marginLeft: '8px', background: '#6b7280' }}>Cancel</button>

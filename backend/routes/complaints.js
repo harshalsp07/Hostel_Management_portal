@@ -41,4 +41,17 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Delete complaint
+router.delete('/:id', async (req, res) => {
+  try {
+    const complaint = await Complaint.findByIdAndDelete(req.params.id);
+    if (!complaint) {
+      return res.status(404).json({ message: 'Complaint not found' });
+    }
+    res.json({ message: 'Complaint deleted successfully', complaint });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 module.exports = router;
