@@ -5,13 +5,12 @@ import {
   signInAnonymously,
   signInWithCustomToken,
   onAuthStateChanged,
-  createUserWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
 import { AuthForm } from './Login.jsx'
 import { HostelDashboard, AdminDashboard, WorkerDashboard } from './Dashboard.jsx'
 import { firebaseConfig as defaultFirebaseConfig } from '../firebase.js'
-import { loginUser, createUserProfile } from './services/userService.js'
+import { loginUser } from './services/userService.js'
 
 // --- Firebase Configuration ---
 // These global variables are provided by the environment.
@@ -113,24 +112,15 @@ export default function App() {
     }
   }, [])
 
-  const handleAuthSubmit = async ({ mode, email, password, userType }) => {
+  const handleAuthSubmit = async ({ mode, email, password }) => {
     if (!auth) return
     setIsProcessing(true)
-    setMessage({ text: mode === 'login' ? 'Signing in...' : 'Creating account...', isError: false })
+    setMessage({ text: 'Signing in...', isError: false })
     try {
-      if (mode === 'login') {
-        const userProfile = await loginUser({ email, password })
-        setUser(userProfile)
-        setUserType(userProfile.userType)
-        setMessage({ text: 'Login successful!', isError: false })
-      } else {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-        const user = userCredential.user;
-        const userProfile = await createUserProfile({ uid: user.uid, email: user.email, userType })
-        setUser(userProfile)
-        setUserType(userProfile.userType)
-        setMessage({ text: 'Account created successfully!', isError: false })
-      }
+      const userProfile = await loginUser({ email, password })
+      setUser(userProfile)
+      setUserType(userProfile.userType)
+      setMessage({ text: 'Login successful!', isError: false })
     } catch (error) {
       setMessage({ text: getFriendlyErrorMessage(error), isError: true })
     } finally {

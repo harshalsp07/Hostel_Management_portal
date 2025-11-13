@@ -2,39 +2,22 @@ import React, { useState } from 'react';
 import './Login.css';
 
 export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProcessing }) => {
-    const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [userType, setUserType] = useState('student');
-
-    const switchTab = (showLogin) => {
-        setIsLogin(showLogin);
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        onClearMessage?.();
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!isLogin && password !== confirmPassword) {
-            setMessage?.({ text: 'Passwords do not match.', isError: true });
-            return;
-        }
-
-        if (!isLogin && password.length < 6) {
+        if (password.length < 6) {
             setMessage?.({ text: 'Password must be at least 6 characters.', isError: true });
             return;
         }
 
         onClearMessage?.();
         await onSubmit?.({
-            mode: isLogin ? 'login' : 'signup',
+            mode: 'login',
             email,
             password,
-            userType,
         });
     };
 
@@ -55,17 +38,10 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
                     <div className="tab-group">
                         <button
                             type="button"
-                            onClick={() => switchTab(true)}
-                            className={`tab-button${isLogin ? ' active' : ''}`}
+                            className="tab-button active"
+                            disabled
                         >
                             Login
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => switchTab(false)}
-                            className={`tab-button${!isLogin ? ' active' : ''}`}
-                        >
-                            Sign Up
                         </button>
                     </div>
 
@@ -76,25 +52,6 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
                     )}
 
                     <form className="auth-form" onSubmit={handleSubmit}>
-                        {!isLogin && (
-                            <div className="form-field">
-                                <label htmlFor="user-type" className="field-label">
-                                    User Type
-                                </label>
-                                <select
-                                    id="user-type"
-                                    name="user-type"
-                                    value={userType}
-                                    onChange={(e) => setUserType(e.target.value)}
-                                    className="field-input"
-                                    required
-                                >
-                                    <option value="student">Student</option>
-                                    <option value="worker">Worker</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </div>
-                        )}
                         <div className="form-field">
                             <label htmlFor="email-address" className="field-label">
                                 Email address
@@ -121,37 +78,19 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                autoComplete={isLogin ? 'current-password' : 'new-password'}
+                                autoComplete="current-password"
                                 required
                                 className="field-input"
                                 placeholder="Enter your password"
                             />
                         </div>
-                        {!isLogin && (
-                            <div className="form-field">
-                                <label htmlFor="confirm-password" className="field-label">
-                                    Confirm password
-                                </label>
-                                <input
-                                    id="confirm-password"
-                                    name="confirm-password"
-                                    type="password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    autoComplete="new-password"
-                                    required
-                                    className="field-input"
-                                    placeholder="Re-enter your password"
-                                />
-                            </div>
-                        )}
 
                         <button
                             type="submit"
-                            className={`auth-submit${isLogin ? ' primary' : ' success'}`}
+                            className="auth-submit primary"
                             disabled={isProcessing}
                         >
-                            {isProcessing ? 'Please wait…' : isLogin ? 'Sign in' : 'Create account'}
+                            {isProcessing ? 'Please wait…' : 'Sign in'}
                         </button>
                     </form>
                 </div>
