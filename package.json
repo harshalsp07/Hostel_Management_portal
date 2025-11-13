@@ -13,9 +13,16 @@
     "setup": "node setup.js"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/daygrid": "^6.1.19",
+    "@fullcalendar/react": "^6.1.19",
     "bootstrap": "^5.3.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
     "firebase": "^12.5.0",
     "mongodb": "^7.0.0",
+    "mongoose": "^8.19.3",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.1",
