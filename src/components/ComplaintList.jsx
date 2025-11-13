@@ -130,6 +130,7 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
   };
 
   const [activeTag, setActiveTag] = useState("All");
+  const [showForm, setShowForm] = useState(false);
 
   // derive unique tags from complaints
   const tags = useMemo(() => {
