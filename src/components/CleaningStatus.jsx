@@ -1,5 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { getCleaningSchedule, updateCleaningStatus } from '../services/cleaningService';
+import broom from '../assets/icons/broom.svg';
+import editIcon from '../assets/icons/edit.svg';
 import "./components.css";
 
 export default function CleaningStatus({ showAll = false, canEdit = false, user, userType }) {
@@ -52,8 +54,16 @@ export default function CleaningStatus({ showAll = false, canEdit = false, user,
   return (
     <section className="card ">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>🧹 {showAll ? 'All Rooms Cleaning Status' : 'My Room Cleaning Status'}</h2>
-        {canEdit && <button className="btn">✏️ Edit</button>}
+        <h2>
+          <img src={broom} alt="" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 8 }} />
+          {showAll ? 'All Rooms Cleaning Status' : 'My Room Cleaning Status'}
+        </h2>
+        {canEdit && (
+          <button className="btn">
+            <img src={editIcon} alt="Edit" style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'middle' }} />
+            Edit
+          </button>
+        )}
       </div>
 
       {showAll && (
@@ -88,7 +98,7 @@ export default function CleaningStatus({ showAll = false, canEdit = false, user,
                   {canEdit && (
                     <select 
                       value={r.status} 
-                      onChange={(e) => handleUpdateStatus(r.id, e.target.value)}
+                      onChange={(e) => handleUpdateStatus(r._id || r.id, e.target.value)}
                       style={{ marginLeft: '8px', padding: '4px' }}
                     >
                       <option value="cleaned">Cleaned</option>
@@ -117,7 +127,11 @@ export default function CleaningStatus({ showAll = false, canEdit = false, user,
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
-              {canEdit && <button className="btn-icon">✏️</button>}
+              {canEdit && (
+                <button className="btn-icon" title="Edit">
+                  <img src={editIcon} alt="Edit" style={{ width: 16, height: 16 }} />
+                </button>
+              )}
             </div>
           </div>
         ))

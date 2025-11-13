@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import calendarIcon from '../assets/icons/calendar.svg';
-import editIcon from '../assets/icons/edit.svg';
-import trashIcon from '../assets/icons/trash.svg';
 import "./components.css";
-import "./styles-additions.css";
 
 export default function ComplaintCard({
   id,
@@ -13,8 +9,6 @@ export default function ComplaintCard({
   tags,
   status,
   content,
-  image,
-  category,
   canEdit = false,
   onUpdateStatus,
   onEdit,
@@ -35,10 +29,7 @@ export default function ComplaintCard({
       <div className="complaint-header">
         <div>
           <h3>{name} - Room {room}</h3>
-          <small className="complaint-date">
-            <img src={calendarIcon} alt="" style={{ width: 14, height: 14, verticalAlign: 'middle', marginRight: 6 }} />
-            {date}
-          </small>
+          <small className="complaint-date">📅 {date}</small>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {canEdit ? (
@@ -82,27 +73,11 @@ export default function ComplaintCard({
         </div>
       ) : (
         <>
-          {image && (
-            <img src={image} alt="Complaint" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '6px', marginBottom: '8px' }} />
-          )}
-          {category && (
-            <div style={{ marginBottom: '8px' }}>
-              <span style={{ display: 'inline-block', backgroundColor: '#e5e7eb', color: '#374151', padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '500' }}>
-                {category}
-              </span>
-            </div>
-          )}
           <p className="complaint-content">{content}</p>
           {canEdit && (
             <div className="complaint-actions">
-              <button className="btn-edit" onClick={() => setIsEditing(true)}>
-                <img src={editIcon} alt="Edit" style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'middle' }} />
-                Edit
-              </button>
-              <button className="btn-delete" onClick={() => onDelete?.(id)}>
-                <img src={trashIcon} alt="Delete" style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'middle' }} />
-                Delete
-              </button>
+              <button className="btn-edit" onClick={() => setIsEditing(true)}>Edit</button>
+              <button className="btn-delete" onClick={() => onDelete?.(id)}>Delete</button>
             </div>
           )}
         </>
