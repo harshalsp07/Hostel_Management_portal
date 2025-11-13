@@ -22,11 +22,20 @@ const complaintSchema = new mongoose.Schema({
     enum: ['Open', 'In Progress', 'Resolved'],
     default: 'Open',
   },
+  category: {
+    type: String,
+    enum: ['Electritian', 'Carpenter', 'Plumber', 'Ac Issue', 'Other'],
+    default: 'Other',
+  },
   tags: [{
     type: String,
   }],
   date: {
     type: String,
+  },
+  image: {
+    type: String,
+    default: null,
   },
 }, {
   timestamps: true,
