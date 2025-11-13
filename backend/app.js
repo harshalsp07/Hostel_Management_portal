@@ -2,8 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const admin = require('./config/firebase');
 
-// Load environment variables
+// Load environment variables ;
 dotenv.config();
 
 // Connect to MongoDB (cached by serverless runtime across warm invocations)
@@ -29,7 +30,7 @@ app.use('/api/equipment', require('./routes/equipment'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/cloudinary', require('./routes/cloudinary'));
 
-// Health check
+// Health check 
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
