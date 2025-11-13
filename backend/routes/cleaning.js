@@ -41,4 +41,34 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Request cleaning for a room
+router.post('/request', async (req, res) => {
+  try {
+    const { roomNumber, requestedBy, requestedAt } = req.body;
+    
+    if (!roomNumber || !requestedBy) {
+      return res.status(400).json({ message: 'Room number and requestedBy are required' });
+    }
+
+    // Update the cleaning schedule to mark as "needs-cleaning" and add request info
+    const schedule = await CleaningSchedule.findOneAndUpdate(
+      { room: roomNumber },
+      { 
+        status: 'needs-cleaning',
+        lastRequestedBy: requestedBy,
+        lastRequestedAt: new Date(requestedAt),
+      },
+      { new: true }
+    );
+
+    if (!schedule) {
+      return res.status(404).json({ message: 'Room not found in cleaning schedule' });
+    }
+
+    res.json({ message: 'Cleaning request submitted successfully', schedule });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 module.exports = router;
