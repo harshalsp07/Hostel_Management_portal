@@ -2,7 +2,7 @@ import React from "react";
 import "./components.css";
 
 export default function Header({ user, userType, onLogout }) {
-  const name = user?.displayName || user?.email || 'Guest';
+  const name = user?.name || user?.displayName || user?.email || 'Guest';
   const initials = name
     .split(' ')
     .map((s) => s[0])

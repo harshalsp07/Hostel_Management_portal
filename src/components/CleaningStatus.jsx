@@ -30,6 +30,29 @@ export default function CleaningStatus({ showAll = false, canEdit = false, user,
     }
   };
 
+  const handleCallForCleaning = async (roomNumber) => {
+    try {
+      const response = await fetch('/api/cleaning/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomNumber,
+          requestedBy: user?.uid,
+          requestedAt: new Date().toISOString(),
+        }),
+      });
+      if (response.ok) {
+        alert('Cleaning request sent successfully!');
+        loadCleaningSchedule();
+      } else {
+        alert('Failed to send cleaning request');
+      }
+    } catch (error) {
+      console.error('Error requesting cleaning:', error);
+      alert('Error sending cleaning request');
+    }
+  };
+
   // Hooks must always run in the same order; compute memos before any conditional return
   const levels = useMemo(() => ["All", "Level 1", "Level 2", "Level 3", "Level 4"], []);
 
@@ -125,8 +148,17 @@ export default function CleaningStatus({ showAll = false, canEdit = false, user,
                 <b>Next scheduled:</b> {r.next}
               </p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span className={`status ${r.status.replace(' ', '-')}`}>{r.status.replace('-', ' ')}</span>
+              {!canEdit && userType === 'student' && (
+                <button 
+                  className="btn-call-cleaning"
+                  onClick={() => handleCallForCleaning(r.room)}
+                  title="Request room cleaning"
+                >
+                  Call for Cleaning
+                </button>
+              )}
               {canEdit && (
                 <button className="btn-icon" title="Edit">
                   <img src={editIcon} alt="Edit" style={{ width: 16, height: 16 }} />
