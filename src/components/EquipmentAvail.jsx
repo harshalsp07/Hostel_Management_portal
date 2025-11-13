@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getEquipment, addEquipment, updateEquipment, deleteEquipment } from '../services/equipmentService';
+import boxIcon from '../assets/icons/box.svg';
+import editIcon from '../assets/icons/edit.svg';
 import "./components.css";
 
 export default function EquipmentAvailability({ canEdit = false }) {
@@ -31,7 +33,7 @@ export default function EquipmentAvailability({ canEdit = false }) {
   const saveEdit = async () => {
     try {
       const item = items[editingIndex];
-      await updateEquipment(item.id, { 
+      await updateEquipment(item._id || item.id, { 
         name: form.name, 
         available: Number(form.available), 
         total: Number(form.total) 
@@ -76,7 +78,10 @@ export default function EquipmentAvailability({ canEdit = false }) {
   return (
     <section className="card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>📦 Equipment Availability</h2>
+        <h2>
+          <img src={boxIcon} alt="" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 8 }} />
+          Equipment Availability
+        </h2>
         {canEdit && !adding && editingIndex === null && (
           <button className="btn" onClick={startAdd}>+ Add Equipment</button>
         )}
@@ -102,7 +107,7 @@ export default function EquipmentAvailability({ canEdit = false }) {
 
         {items.map((i, idx) => (
           editingIndex === idx ? (
-            <div key={i.name + idx} className="equipment-item">
+            <div key={(i._id || i.id || i.name) + '-' + idx} className="equipment-item">
               <div className="equipment-header">
                 <h3>Edit {i.name}</h3>
               </div>
@@ -117,12 +122,17 @@ export default function EquipmentAvailability({ canEdit = false }) {
               </div>
             </div>
           ) : (
-            <div key={i.name + idx} className="equipment-item">
+            <div key={(i._id || i.id || i.name) + '-' + idx} className="equipment-item">
               <div className="equipment-header">
                 <h3>{i.name}</h3>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <span className="status good">Good</span>
-                  {canEdit && <button className="btn" onClick={() => startEdit(idx)}>Edit</button>}
+                  {canEdit && (
+                    <button className="btn" onClick={() => startEdit(idx)}>
+                      <img src={editIcon} alt="Edit" style={{ width: 14, height: 14, marginRight: 6, verticalAlign: 'middle' }} />
+                      Edit
+                    </button>
+                  )}
                 </div>
               </div>
               <p className="available-text">Available:</p>

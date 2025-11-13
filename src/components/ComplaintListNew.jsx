@@ -1,20 +1,15 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { getComplaints, addComplaint, updateComplaint, deleteComplaint } from '../services/complaintService';
-import { uploadImageToCloudinary } from '../services/cloudinaryService';
 import ComplaintCard from "./ComplaintCard";
-import chat from '../assets/icons/chat.svg';
 import "./components.css";
-import "./styles-additions.css";
 
 export default function ComplaintList({ canAdd = true, canEdit = false, user, userType }) {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState({ content: '', room: '', category: 'Other', image: null });
-  const [imagePreview, setImagePreview] = useState(null);
+  const [formData, setFormData] = useState({ content: '', room: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     loadComplaints();
@@ -32,18 +27,6 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
     setLoading(false);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, image: file });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleAddComplaint = async () => {
     if (!formData.content.trim()) {
       setError('Please enter a complaint');
@@ -51,40 +34,23 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
     }
     try {
       setError('');
-      setUploading(true);
-      const complaintData = {
+      await addComplaint({
         content: formData.content,
         name: user?.name || user?.email || 'Anonymous',
         room: formData.room || user?.roomNumber || 'N/A',
         userId: user?.uid || user?.id,
-        category: formData.category,
         date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
         tags: ['Open'],
         status: 'Open',
-      };
-      
-      if (formData.image) {
-        try {
-          const imageUrl = await uploadImageToCloudinary(formData.image);
-          complaintData.image = imageUrl;
-        } catch (error) {
-          console.error('Error uploading image:', error);
-          setError('Failed to upload image. Complaint will be saved without image.');
-        }
-      }
-      
-      await addComplaint(complaintData);
-      setFormData({ content: '', room: '', category: 'Other', image: null });
-      setImagePreview(null);
+      });
+      setFormData({ content: '', room: '' });
       setShowAddForm(false);
-      setUploading(false);
       setSuccess('Complaint added successfully!');
       setTimeout(() => setSuccess(''), 3000);
       await loadComplaints();
     } catch (error) {
       console.error('Error adding complaint:', error);
       setError('Failed to add complaint. Please try again.');
-      setUploading(false);
     }
   };
 
@@ -131,7 +97,6 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
 
   const [activeTag, setActiveTag] = useState("All");
 
-  // derive unique tags from complaints
   const tags = useMemo(() => {
     const s = new Set();
     complaints.forEach((c) => c.tags?.forEach((t) => s.add(t)));
@@ -148,10 +113,7 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
   return (
     <section className="card">
       <div className="complaint-header-bar">
-        <h2>
-          <img src={chat} alt="" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 8 }} />
-          {userType === 'student' ? 'My Complaints' : 'All Complaints'}
-        </h2>
+        <h2>💬 {userType === 'student' ? 'My Complaints' : 'All Complaints'}</h2>
         <div>
           {canAdd && !showAddForm && <button className="btn" onClick={() => setShowAddForm(true)}>+ Add Complaint</button>}
         </div>
@@ -176,33 +138,8 @@ export default function ComplaintList({ canAdd = true, canEdit = false, user, us
             onChange={(e) => setFormData({ ...formData, room: e.target.value })}
             style={{ width: '100%', padding: '8px', marginBottom: '8px', fontSize: '14px', borderRadius: '6px', border: '1px solid #ddd' }}
           />
-          <select
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            style={{ width: '100%', padding: '8px', marginBottom: '8px', fontSize: '14px', borderRadius: '6px', border: '1px solid #ddd' }}
-          >
-            <option value="Electritian">Electritian</option>
-            <option value="Carpenter">Carpenter</option>
-            <option value="Plumber">Plumber</option>
-            <option value="Ac Issue">Ac Issue</option>
-            <option value="Other">Other</option>
-          </select>
-          <div style={{ marginBottom: '8px' }}>
-            <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>Upload Image (optional)</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ width: '100%', padding: '8px', fontSize: '14px', borderRadius: '6px', border: '1px solid #ddd' }}
-            />
-          </div>
-          {imagePreview && (
-            <div style={{ marginBottom: '8px' }}>
-              <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '6px' }} />
-            </div>
-          )}
-          <button className="btn" onClick={handleAddComplaint} disabled={uploading}>{uploading ? 'Uploading...' : 'Submit'}</button>
-          <button className="btn" onClick={() => { setShowAddForm(false); setFormData({ content: '', room: '', category: 'Other', image: null }); setImagePreview(null); }} style={{ marginLeft: '8px', background: '#6b7280' }} disabled={uploading}>Cancel</button>
+          <button className="btn" onClick={handleAddComplaint}>Submit</button>
+          <button className="btn" onClick={() => { setShowAddForm(false); setFormData({ content: '', room: '' }); }} style={{ marginLeft: '8px', background: '#6b7280' }}>Cancel</button>
         </div>
       )}
 
