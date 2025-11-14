@@ -296,3 +296,29 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* OTP UI */
+.otp-box {
+  background: rgba(37,99,235,0.08);
+  border: 1px dashed rgba(37,99,235,0.2);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+.otp-input {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-call-cleaning {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-call-cleaning:hover {
+  opacity: 0.95;
+}
