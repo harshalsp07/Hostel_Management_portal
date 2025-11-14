@@ -35,16 +35,6 @@ export const AuthForm = ({ onSubmit, message, setMessage, onClearMessage, isProc
                     </ul>
                 </div>
                 <div className="form-panel">
-                    <div className="tab-group">
-                        <button
-                            type="button"
-                            className="tab-button active"
-                            disabled
-                        >
-                            Login
-                        </button>
-                    </div>
-
                     {message?.text && (
                         <div className={`auth-message${message.isError ? ' error' : ' success'}`}>
                             {message.text}
