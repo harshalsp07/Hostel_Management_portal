@@ -55,6 +55,25 @@ router.post('/request', async (req, res) => {
   try {
     const { roomNumber, requestedBy, requestedAt } = req.body;
 
+    // Check if cleaning request was made in the last 3 days
+    const schedule = await CleaningSchedule.findOne({ room: roomNumber });
+    
+    if (schedule && schedule.lastCleaningRequestAt) {
+      const lastRequestTime = new Date(schedule.lastCleaningRequestAt).getTime();
+      const currentTime = new Date().getTime();
+      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+      const timeSinceLastRequest = currentTime - lastRequestTime;
+      
+      if (timeSinceLastRequest < threeDaysMs) {
+        const hoursRemaining = Math.ceil((threeDaysMs - timeSinceLastRequest) / (60 * 60 * 1000));
+        return res.status(400).json({ 
+          success: false, 
+          message: `You can request cleaning again in ${hoursRemaining} hours. Last request was ${Math.floor(timeSinceLastRequest / (60 * 60 * 1000))} hours ago.`,
+          hoursRemaining
+        });
+      }
+    }
+
     // generate a 6-digit OTP server-side for security and persistence
     const otp = String(Math.floor(100000 + Math.random() * 900000));
 
@@ -63,7 +82,7 @@ router.post('/request', async (req, res) => {
     // Persist the OTP on the cleaning schedule document so workers can see it
     const updated = await CleaningSchedule.findOneAndUpdate(
       { room: roomNumber },
-      { $set: { otp: otp, otpCreatedAt: new Date() } },
+      { $set: { otp: otp, otpCreatedAt: new Date(), lastCleaningRequestAt: new Date() } },
       { new: true }
     );
 

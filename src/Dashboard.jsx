@@ -6,6 +6,7 @@ import CleaningStatus from './components/CleaningStatus';
 import NoticeBoard from './components/NoticeBoard';
 import DateCalendar from './components/DateCalendar';
 import UserManagement from './components/UserManagement';
+import RoomManagement from './components/RoomManagement';
 
 
 export const HostelDashboard = ({ user, userType, onLogout }) => {
@@ -28,11 +29,12 @@ export const AdminDashboard = ({ user, userType, onLogout }) => {
     <div className="app">
       <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
-        <UserManagement />
         <NoticeBoard canAdd={true} canEdit={true} />
         <CleaningStatus showAll={true} canEdit={true} user={user} userType={userType} />
         <ComplaintList canAdd={false} canEdit={true} user={user} userType={userType} />
         <EquipmentAvailability canEdit={true} />
+        <RoomManagement />
+        <UserManagement />
         <DateCalendar />
       </div>
     </div>
@@ -44,7 +46,7 @@ export const WorkerDashboard = ({ user, userType, onLogout }) => {
     <div className="app">
       <Header user={user} userType={userType} onLogout={onLogout} />
       <div className="container">
-        <NoticeBoard canAdd={true} canEdit={false} />
+        <NoticeBoard canAdd={false} canEdit={false} />
         <CleaningStatus showAll={true} canEdit={true} user={user} userType={userType} />
         <ComplaintList canAdd={false} canEdit={true} user={user} userType={userType} />
         <EquipmentAvailability canEdit={false} />

@@ -24,6 +24,9 @@ const cleaningScheduleSchema = new mongoose.Schema({
   cleanedUntil: {
     type: Date,
   },
+  lastCleaningRequestAt: {
+    type: Date,
+  },
   status: {
     type: String,
     enum: ['cleaned', 'needs-cleaning', 'scheduled'],

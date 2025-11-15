@@ -179,4 +179,41 @@ router.delete('/:uid', async (req, res) => {
   }
 });
 
+// POST /api/users/:uid/reset-password - admin resets user password
+router.post('/:uid/reset-password', async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({ code: 'VALIDATION_ERROR', message: 'newPassword is required' });
+    }
+
+    // Update password in Firebase
+    try {
+      await admin.auth().updateUser(uid, {
+        password: newPassword,
+      });
+    } catch (firebaseError) {
+      console.error('Firebase password update error:', firebaseError);
+      return res.status(400).json({ code: 'FIREBASE_ERROR', message: firebaseError.message });
+    }
+
+    // Verify user exists in MongoDB
+    const user = await User.findOne({ uid });
+    if (!user) {
+      return res.status(404).json({ code: 'USER_NOT_FOUND', message: 'User not found' });
+    }
+
+    res.json({ 
+      message: 'Password reset successfully',
+      email: user.email,
+      newPassword: newPassword
+    });
+  } catch (err) {
+    console.error('Error resetting password:', err);
+    res.status(500).json({ code: 'PASSWORD_RESET_ERROR', message: 'Internal server error' });
+  }
+});
+
 module.exports = router;

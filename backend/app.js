@@ -2,12 +2,47 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const CleaningSchedule = require('./models/CleaningSchedule');
 
 // Load environment variables ;
 dotenv.config();
 
 // Connect to MongoDB (cached by serverless runtime across warm invocations)
 connectDB();
+
+// Initialize cleaning schedule with rooms from database
+const initializeCleaningSchedule = async () => {
+  try {
+    const Room = require('./models/Room');
+    const rooms = await Room.find({ status: 'active' });
+    
+    if (rooms.length === 0) {
+      console.log('No rooms found in database. Please add rooms via admin panel.');
+      return;
+    }
+
+    for (const roomData of rooms) {
+      await CleaningSchedule.findOneAndUpdate(
+        { room: roomData.room },
+        { 
+          $setOnInsert: {
+            room: roomData.room,
+            level: roomData.level,
+            status: 'scheduled',
+            cleanedUntil: new Date(),
+          }
+        },
+        { upsert: true }
+      );
+    }
+    console.log(`Cleaning schedule initialized with ${rooms.length} rooms`);
+  } catch (error) {
+    console.error('Error initializing cleaning schedule:', error);
+  }
+};
+
+// Initialize on startup (with delay to ensure DB connection)
+setTimeout(initializeCleaningSchedule, 2000);
 
 const app = express();
 
@@ -27,6 +62,7 @@ app.use('/api/complaints', require('./routes/complaints'));
 app.use('/api/cleaning', require('./routes/cleaning'));
 app.use('/api/equipment', require('./routes/equipment'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/rooms', require('./routes/rooms'));
 app.use('/api/cloudinary', require('./routes/cloudinary'));
 
 // Health check 
