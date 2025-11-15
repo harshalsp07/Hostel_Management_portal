@@ -15,6 +15,14 @@ const UserManagement = () => {
     userType: 'student',
   });
   const [generatedPassword, setGeneratedPassword] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    phone: '',
+    roomNumber: '',
+    userType: 'student',
+  });
 
   useEffect(() => {
     fetchUsers();
@@ -122,6 +130,56 @@ const UserManagement = () => {
         text: error?.message || 'Failed to delete user', 
         isError: true 
       });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openEditModal = (user) => {
+    setEditingUser(user);
+    setEditFormData({
+      name: user.name || '',
+      phone: user.phone || '',
+      roomNumber: user.roomNumber || '',
+      userType: user.userType || 'student',
+    });
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setEditingUser(null);
+    setShowEditModal(false);
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    try {
+      setLoading(true);
+      const updates = {
+        name: editFormData.name,
+        phone: editFormData.phone,
+        roomNumber: editFormData.roomNumber,
+        userType: editFormData.userType,
+      };
+
+      await apiCall(`/users/${editingUser.uid}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updates),
+      });
+
+      setMessage({ text: 'User updated successfully', isError: false });
+      await fetchUsers();
+      closeEditModal();
+    } catch (error) {
+      console.error('Error updating user:', error);
+      setMessage({ text: error?.message || 'Failed to update user', isError: true });
     } finally {
       setLoading(false);
     }
@@ -288,6 +346,13 @@ const UserManagement = () => {
                   <td>{new Date(user.createdAt || user.timestamps?.createdAt).toLocaleDateString()}</td>
                   <td>
                     <button
+                      onClick={() => openEditModal(user)}
+                      className="btn-edit"
+                      disabled={loading}
+                    >
+                      Edit
+                    </button>
+                    <button
                       onClick={() => handleDeleteUser(user.uid)}
                       className="btn-delete"
                       disabled={loading}
@@ -301,6 +366,44 @@ const UserManagement = () => {
           </table>
         )}
       </div>
+      {showEditModal && (
+        <div className="modal-overlay" onClick={closeEditModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Edit User</h3>
+            <form className="user-form" onSubmit={handleUpdateUser}>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="edit-name">Name</label>
+                  <input id="edit-name" name="name" value={editFormData.name} onChange={handleEditInputChange} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="edit-phone">Phone</label>
+                  <input id="edit-phone" name="phone" value={editFormData.phone} onChange={handleEditInputChange} />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="edit-roomNumber">Room Number</label>
+                  <input id="edit-roomNumber" name="roomNumber" value={editFormData.roomNumber} onChange={handleEditInputChange} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="edit-userType">User Type</label>
+                  <select id="edit-userType" name="userType" value={editFormData.userType} onChange={handleEditInputChange}>
+                    <option value="student">Student</option>
+                    <option value="worker">Worker</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                <button type="submit" className="btn-submit" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>
+                <button type="button" className="btn-cancel" onClick={closeEditModal} disabled={loading}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
