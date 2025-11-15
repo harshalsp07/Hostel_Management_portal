@@ -23,6 +23,10 @@ const UserManagement = () => {
     roomNumber: '',
     userType: 'student',
   });
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordResetUser, setPasswordResetUser] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [showPasswordField, setShowPasswordField] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -190,6 +194,58 @@ const UserManagement = () => {
     setMessage({ text: 'Password copied to clipboard', isError: false });
   };
 
+  const openPasswordResetModal = (user) => {
+    setPasswordResetUser(user);
+    setNewPassword('');
+    setShowPasswordField(false);
+    setShowPasswordModal(true);
+  };
+
+  const closePasswordResetModal = () => {
+    setPasswordResetUser(null);
+    setNewPassword('');
+    setShowPasswordField(false);
+    setShowPasswordModal(false);
+  };
+
+  const generateNewPassword = () => {
+    const password = generatePassword();
+    setNewPassword(password);
+    setShowPasswordField(true);
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!passwordResetUser || !newPassword) {
+      setMessage({ text: 'Please generate or enter a password', isError: true });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await apiCall(`/users/${passwordResetUser.uid}/reset-password`, {
+        method: 'POST',
+        body: JSON.stringify({ newPassword }),
+      });
+
+      if (response) {
+        setMessage({ 
+          text: `Password reset successfully for ${passwordResetUser.email}. New password: ${newPassword}`, 
+          isError: false 
+        });
+        closePasswordResetModal();
+      }
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      setMessage({ 
+        text: error?.message || 'Failed to reset password', 
+        isError: true 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="user-management-container">
       <div className="user-management-header">
@@ -353,6 +409,13 @@ const UserManagement = () => {
                       Edit
                     </button>
                     <button
+                      onClick={() => openPasswordResetModal(user)}
+                      className="btn-reset-password"
+                      disabled={loading}
+                    >
+                      Reset Password
+                    </button>
+                    <button
                       onClick={() => handleDeleteUser(user.uid)}
                       className="btn-delete"
                       disabled={loading}
@@ -399,6 +462,64 @@ const UserManagement = () => {
               <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
                 <button type="submit" className="btn-submit" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>
                 <button type="button" className="btn-cancel" onClick={closeEditModal} disabled={loading}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {showPasswordModal && passwordResetUser && (
+        <div className="modal-overlay" onClick={closePasswordResetModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Reset Password for {passwordResetUser.email}</h3>
+            <form className="user-form" onSubmit={handleResetPassword}>
+              <div className="form-group">
+                <label>Generate or Enter New Password</label>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                  <button
+                    type="button"
+                    onClick={generateNewPassword}
+                    className="btn-submit"
+                    disabled={loading}
+                  >
+                    Generate Password
+                  </button>
+                </div>
+              </div>
+
+              {showPasswordField && (
+                <div className="form-group">
+                  <label htmlFor="new-password">New Password</label>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <input
+                      id="new-password"
+                      type="text"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Generated password"
+                      readOnly
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(newPassword);
+                        setMessage({ text: 'Password copied to clipboard', isError: false });
+                      }}
+                      className="btn-copy"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                  <small>Share this password with the user</small>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                <button type="submit" className="btn-submit" disabled={loading || !showPasswordField}>
+                  {loading ? 'Resetting...' : 'Reset Password'}
+                </button>
+                <button type="button" className="btn-cancel" onClick={closePasswordResetModal} disabled={loading}>
+                  Cancel
+                </button>
               </div>
             </form>
           </div>

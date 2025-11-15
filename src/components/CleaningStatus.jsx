@@ -162,10 +162,15 @@ export default function CleaningStatus({ showAll = false, canEdit = false, user,
       });
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        throw new Error(err.message || 'Failed to request cleaning');
+        const errorMsg = err.message || 'Failed to request cleaning';
+        alert(errorMsg);
+        throw new Error(errorMsg);
       }
       const body = await resp.json();
-      if (!body.success) throw new Error(body.message || 'Failed to request cleaning');
+      if (!body.success) {
+        alert(body.message || 'Failed to request cleaning');
+        throw new Error(body.message || 'Failed to request cleaning');
+      }
 
       // server should return the updated schedule for that room
       const updatedSchedule = body.schedule;
@@ -183,7 +188,6 @@ export default function CleaningStatus({ showAll = false, canEdit = false, user,
       if (otp) alert(`Cleaning OTP generated: ${otp} — share this with the worker to confirm cleaning.`);
     } catch (error) {
       console.error('Error requesting cleaning:', error);
-      alert('Error sending cleaning request');
     }
   };
 
