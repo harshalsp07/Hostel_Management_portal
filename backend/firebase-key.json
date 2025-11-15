@@ -1,13 +1,3 @@
 {
-  "type": "service_account",
-  "project_id": "hostelmanegement07",
-  "private_key_id": "f8d6bc62f6469a8cf242b3206f713fb70ac91458",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCkMxfXO55QqsAU\nPwimvM6QfC+NseWTVQLVM5Wp0UyzNjxGitDfSZnh14RYQfMw1I4xw3YfRNTGzkUY\n8WfiClq7iX3buqwUBw4q0k6MJrQfzk8uFbitu3kdNx3aWzui7JdInk56pDqMd1bC\nzxfif6kUubLG3xtpjDPekRzYUZqCkvUbME2mARusOi9UeEgOVbi7JRX5mpUk2Psg\nWlI6dygZi1TfcnT/lHhXqoidWLi+wPIUJAugt/t/JhN1V8fnlnz8tgO0UaV5+Ume\n3AXoTkIhlpsZeyzkPEj0oVa8bqeh12l+L5LRSbqHzkUlGPem1u+N12B0yahDuFkM\nIjHNxegzAgMBAAECggEACo96rg4YjYmd1u+C5+5mvqYuDMfvQv2JtBqgOo7KhxAq\n6kKNUn8SVZMd4OtE79QL3Sl8FGDB6pNjoEoOa1xNH5ilLpef753QjHKAOMVYel8z\nenxNJ2dST822rs+FU2IyDKqZ04tydIxMWTUmjRu2zS1wURgSVER/JYZhu4vsCw+8\nMdI+/kuUbrDZa0NZaG03r9869Sksa3wt0C+ZgqPoAIQWPhCovX9xlSkXBW1Xl0lG\nJSUjuOtyxv9h+HDrbsNjpzsq2eao/aEvL9+uoz0cCabBF22p+FhFYjv42A1IPY0E\nBDoAeHzSKUAM8ZXYrg6p5mN7+BfeKsj/8J0UFJyXsQKBgQDP9eWNQOq7ENjdXaUk\nf9vlK5cbvTUnsyEwWRUyX/dQhbYz583B4vzYZppML/OkrGvFS54kTnFzIb1yVfbt\nXD/Qdqogu/bMOPJJKL3yqLw74pvHr41+usW1GyKh/7squJaj26ymoeYboYx6ePbr\n4qy49pdl5dUzxKnNYU8rOyHK2wKBgQDKIVFC8XkWzAMc3+F+EOXOosCFDa7CvM+0\nKaLrHty6daRAW73LlBvHv1dJFvI5/jzLN3gveLXwnt8v3JN0OWrQE7FDqCcrWcv6\nYmLrC9bSJkXpFdMdXjpIoN4tasLloRVu480Jy1cR3gt7ftZK79+h98vFIwmyWJnj\nskst06XbiQKBgFN/vf2rVRRrPUgUs5wmIlqv1+pxXAhmqirJefNSCPEx3uiUaE8z\nHqac+9MfZcp22IbNR9/4ByFdKL3hulWvtoezPbgLAJsbOl0ZmLr3+SxqXnYdDMkX\noQ6IqK03CyWqHAIK0BXP556sjMUYELzBtOxHRp7JW4N/sVYffjQzd+wFAoGAB5yh\nlsfJK5abN2cm8rxoKxPt9BTD1AmQONSokfojjdIIUXQi/ZuiQC9wdgwrKwvr9iss\nl30QPPN+rCq+Us4mu5dCQa3/a56CE/fIidl0SY2vbEuqG50EzN9h/ovasxMR348s\nlYXWzZFzFT99imzmGw9d2Rqsrs6vXOfF9P/XayECgYBjqseXJ1McI7v8bEEx0aXm\nzkVjS4OOpy9dalQVVflrDptN9eX6UC2BUAEMwpuX4VnZtSn/yevaEmIvK/VosX7M\nYRCZH/dGrcLgg9uMGRANOumL0AXvRQIG385iNFcM4wkKTvvk93JfVz2nNDR9Xwce\nVI7XSA+WT6g34ATVY3caGg==\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-fbsvc@hostelmanegement07.iam.gserviceaccount.com",
-  "client_id": "109255278089820662751",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40hostelmanegement07.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+  //here will go the firebase-key
 }
