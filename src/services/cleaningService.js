@@ -14,11 +14,12 @@ export const getCleaningSchedule = async (userType = null, roomNumber = null) =>
   }
 };
 
-export const updateCleaningStatus = async (id, status) => {
+export const updateCleaningStatus = async (id, statusOrBody) => {
   try {
+    const body = typeof statusOrBody === 'string' ? { status: statusOrBody } : statusOrBody;
     return await apiCall(`/cleaning/${id}`, {
       method: 'PUT',
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(body),
     });
   } catch (error) {
     console.error('Error updating cleaning status:', error);

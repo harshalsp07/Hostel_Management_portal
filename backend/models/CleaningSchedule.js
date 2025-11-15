@@ -15,6 +15,15 @@ const cleaningScheduleSchema = new mongoose.Schema({
   next: {
     type: String,
   },
+  otp: {
+    type: String,
+  },
+  otpCreatedAt: {
+    type: Date,
+  },
+  cleanedUntil: {
+    type: Date,
+  },
   status: {
     type: String,
     enum: ['cleaned', 'needs-cleaning', 'scheduled'],
