@@ -13,8 +13,17 @@ const router = express.Router();
 // Initialize Firebase Admin if not already done
 if (!admin.apps.length) {
   try {
-    const serviceAccountPath = path.join(__dirname, '../firebase-key.json');
-    const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+    let serviceAccount;
+    
+    // Try to load from environment variable first (for Vercel)
+    if (process.env.FIREBASE_KEY_JSON) {
+      serviceAccount = JSON.parse(process.env.FIREBASE_KEY_JSON);
+    } else {
+      // Fall back to file system (for local development)
+      const serviceAccountPath = path.join(__dirname, '../firebase-key.json');
+      serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+    }
+    
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
     });
