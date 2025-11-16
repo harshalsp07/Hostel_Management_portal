@@ -1,8 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const CleaningSchedule = require('./models/CleaningSchedule');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+import CleaningSchedule from './models/CleaningSchedule.js';
+import noticesRouter from './routes/notices.js';
+import complaintsRouter from './routes/complaints.js';
+import cleaningRouter from './routes/cleaning.js';
+import equipmentRouter from './routes/equipment.js';
+import usersRouter from './routes/users.js';
+import roomsRouter from './routes/rooms.js';
+import cloudinaryRouter from './routes/cloudinary.js';
 
 // Load environment variables ;
 dotenv.config();
@@ -13,7 +20,7 @@ connectDB();
 // Initialize cleaning schedule with rooms from database
 const initializeCleaningSchedule = async () => {
   try {
-    const Room = require('./models/Room');
+    const { default: Room } = await import('./models/Room.js');
     const rooms = await Room.find({ status: 'active' });
     
     if (rooms.length === 0) {
@@ -57,13 +64,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/notices', require('./routes/notices'));
-app.use('/api/complaints', require('./routes/complaints'));
-app.use('/api/cleaning', require('./routes/cleaning'));
-app.use('/api/equipment', require('./routes/equipment'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/rooms', require('./routes/rooms'));
-app.use('/api/cloudinary', require('./routes/cloudinary'));
+app.use('/api/notices', noticesRouter);
+app.use('/api/complaints', complaintsRouter);
+app.use('/api/cleaning', cleaningRouter);
+app.use('/api/equipment', equipmentRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/rooms', roomsRouter);
+app.use('/api/cloudinary', cloudinaryRouter);
 
 // Health check 
 app.get('/api/health', (req, res) => {
@@ -90,4 +97,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;

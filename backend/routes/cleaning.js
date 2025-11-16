@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import CleaningSchedule from '../models/CleaningSchedule.js';
+
 const router = express.Router();
-const CleaningSchedule = require('../models/CleaningSchedule');
 
 // Get cleaning schedule (filtered by room if provided)
 router.get('/', async (req, res) => {
@@ -106,4 +107,4 @@ router.post('/request', async (req, res) => {
 });
 
 
-module.exports = router;
+export default router;

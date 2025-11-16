@@ -1,12 +1,20 @@
-const express = require('express');
+import express from 'express';
+import User from '../models/User.js';
+import admin from 'firebase-admin';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const router = express.Router();
-const User = require('../models/User');
-const admin = require('firebase-admin');
 
 // Initialize Firebase Admin if not already done
 if (!admin.apps.length) {
   try {
-    const serviceAccount = require('../firebase-key.json');
+    const serviceAccountPath = path.join(__dirname, '../firebase-key.json');
+    const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
     });
@@ -216,4 +224,4 @@ router.post('/:uid/reset-password', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

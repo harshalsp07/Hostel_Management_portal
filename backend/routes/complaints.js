@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import Complaint from '../models/Complaint.js';
+
 const router = express.Router();
-const Complaint = require('../models/Complaint');
 
 // Get complaints (filtered by userId if provided)
 router.get('/', async (req, res) => {
@@ -54,4 +55,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

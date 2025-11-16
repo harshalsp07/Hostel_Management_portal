@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const cleaningScheduleSchema = new mongoose.Schema({
   room: {
@@ -36,4 +36,4 @@ const cleaningScheduleSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-module.exports = mongoose.model('CleaningSchedule', cleaningScheduleSchema);
+export default mongoose.model('CleaningSchedule', cleaningScheduleSchema);

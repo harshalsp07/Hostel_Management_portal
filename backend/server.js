@@ -1,6 +1,6 @@
-const app = require('./app');
-const http = require('http');
-const { Server } = require('socket.io');
+import app from './app.js';
+import http from 'http';
+import { Server } from 'socket.io';
 
 const PORT = process.env.PORT || 5000;
 

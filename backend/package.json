@@ -1,6 +1,7 @@
 {
   "name": "hostel-management-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend server for Hostel Management System",
   "main": "server.js",
   "scripts": {

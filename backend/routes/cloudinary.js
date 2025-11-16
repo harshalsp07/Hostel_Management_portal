@@ -1,9 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const cloudinary = require('cloudinary').v2;
-const dotenv = require('dotenv');
+import express from 'express';
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
 
 dotenv.config();
+
+const router = express.Router();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dqdbg6ezk',
@@ -27,4 +28,4 @@ router.post('/delete', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

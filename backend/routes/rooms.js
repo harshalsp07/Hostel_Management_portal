@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import Room from '../models/Room.js';
+import CleaningSchedule from '../models/CleaningSchedule.js';
+
 const router = express.Router();
-const Room = require('../models/Room');
-const CleaningSchedule = require('../models/CleaningSchedule');
 
 // GET /api/rooms - get all rooms
 router.get('/', async (req, res) => {
@@ -110,4 +111,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
